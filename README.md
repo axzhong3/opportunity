@@ -1,4 +1,3 @@
-<span style="font-size: '6';">foo</span>
 python -g GOLDEN_FILE -i INPUT_VECTOR_FILE -c COLUMN_NUMBER [-d]
 
 NOTE: COLUMN_NUMBER = 1-7, 1 meaning the last column

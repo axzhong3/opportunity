@@ -1,7 +1,7 @@
 import getopt, os, sys
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], "g:i:c:hd", ["golden=", "input=", "column=", "help", "debug"])
+    opts, args = getopt.getopt(sys.argv[1:], "g:i:c:hd", ["golden=", "invector=", "column=", "help", "debug"])
 except getopt.GetoptError as err:
     print "ERROR parsing args"
     usage()
@@ -11,7 +11,7 @@ def usage():
     print "python -g GOLDEN_FILE -i INPUT_VECTOR_FILE -c COLUMN_NUMBER [-d]"
 
 golden = ''
-input  = ''
+invector  = ''
 debug  = ''
 
 for o, a in opts:
@@ -21,9 +21,9 @@ for o, a in opts:
         else:
             print "GOLDEN FILE does not exist"
             sys.exit(2)
-    elif o in ("-i", "--input"):
+    elif o in ("-i", "--invector"):
         if os.path.isfile(a):
-            input = a
+            invector = a
         else:
             print "INPUT VECTOR FILE does not exists"
             sys.exit(2)
@@ -39,13 +39,13 @@ for o, a in opts:
         print "ERROR: UNKNOWN arguments"
         sys.exit(2)
 
-if not input or not golden:
+if not invector or not golden:
     print "ERROR: no golden or no input vector file"
     usage()
     sys.exit(2)
 
 gp = open(golden)
-ip = open(input)
+ip = open(invector)
 gv = []
 iv = []
 gv_dict = {}
