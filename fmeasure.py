@@ -1,7 +1,7 @@
 import getopt, os, sys
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], "g:i:c:h", ["golden=", "input=", "column=", "help"])
+    opts, args = getopt.getopt(sys.argv[1:], "g:i:c:hd", ["golden=", "input=", "column=", "help", "debug"])
 except getopt.GetoptError as err:
     print "ERROR parsing args"
     usage()
@@ -12,6 +12,7 @@ def usage():
 
 golden = ''
 input  = ''
+debug  = ''
 
 for o, a in opts:
     if o == "-g":
@@ -32,6 +33,8 @@ for o, a in opts:
     elif o in ("-c", "--column"):
         column = int(a)
         assert(int(a) > 0)
+    elif o in ("-d", "--debug"):
+        debug = True
     else:
         print "ERROR: UNKNOWN arguments"
         sys.exit(2)
@@ -65,5 +68,7 @@ for key in gv_dict.keys():
     fn = [gv[i] == key and iv[i] != key for i in range(0, l)].count(True)
     precision = 1.0 * tp / (tp + fp)
     recall = 1.0 * tp / (tp + fn)
+    if (debug):
+        print "class %d: tp = %d, fp = %d, fn = %d, precision = %3f, recall = %3f" % (key, tp, fp, fn, precision, recall)
     F1 += 2.0*gv_dict[key]/len(gv)*(precision*recall)/(precision+recall)
 print F1
