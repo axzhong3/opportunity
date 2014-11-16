@@ -8,7 +8,7 @@ except getopt.GetoptError as err:
     sys.exit(2)
 
 def usage():    
-    print "python -g GOLDEN_FILE -i INPUT_VECTOR_FILE -c COLUMN_NUMBER"
+    print "python -g GOLDEN_FILE -i INPUT_VECTOR_FILE -c COLUMN_NUMBER [-d]"
 
 golden = ''
 input  = ''
@@ -71,4 +71,4 @@ for key in gv_dict.keys():
     if (debug):
         print "class %d: tp = %d, fp = %d, fn = %d, precision = %3f, recall = %3f" % (key, tp, fp, fn, precision, recall)
     F1 += 2.0*gv_dict[key]/len(gv)*(precision*recall)/(precision+recall)
-print F1
+print "F1 = %f" % F1
