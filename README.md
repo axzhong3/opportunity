@@ -1,0 +1,1 @@
+python -g GOLDEN_FILE -i INPUT_VECTOR_FILE -c COLUMN_NUMBER [-d]
