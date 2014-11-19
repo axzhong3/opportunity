@@ -92,7 +92,7 @@ cf.close()
 
 # legend table
 lf = open(legend)
-lg_regex = re.compile("([0-9]+)\s*-\s*(\S+)\s*-\s*(\S+)")
+lg_regex = re.compile("([0-9]+)\s*-\s*(\S+)\s*-\s*(\S+.*)")
 for line in lf:
     result = lg_regex.match(line)
     if result:
