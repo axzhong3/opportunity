@@ -1,7 +1,7 @@
 import getopt, os, sys, sqlite3, re, glob
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], "c:d:l:hr:", ["column_names=", "data_dir=", "label_legend=", "help", "regex"])
+    opts, args = getopt.getopt(sys.argv[1:], "c:d:l:hr:n:", ["column_names=", "data_dir=", "label_legend=", "help", "regex", "database_name"])
 except getopt.GetoptError as err:
     print "ERROR parsing args"
     usage()
@@ -12,12 +12,14 @@ def usage():
     print " [-c, --column_names=COLUMN_NAMES.TXT]"
     print " [-l, --label_legend=LABEL_LEGEND.TXT]"
     print " [-d, --data_dir=DATA_DIR]"
+    print " [-n, --database_name=DATABASE_NAME]"
     print " -r, --regex=DATA_FILES_TO_INCLUDE"
 
 col_names = os.getcwd() + '/column_names.txt'
 legend = os.getcwd() + '/label_legend.txt'
 data_dir = os.getcwd()
 regex = re.compile("S.*dat$")
+database_name = 'data.db'
 
 for o, a in opts:
     if o == '-c':
@@ -28,6 +30,11 @@ for o, a in opts:
         data_dir = a
     elif o == "-r":
         regex = re.compile(a)
+    elif o == "-n":
+        database_name = a
+    elif o == '-h':
+        usage()
+        sys.exit()
     else:
         print "ERROR: UNKNOWN arguments"
         usage()
@@ -37,7 +44,7 @@ assert os.path.isfile(col_names), "column_name.txt does not exist"
 assert os.path.isfile(legend), "legend does not exist" 
 assert(os.path.isdir(data_dir)), "data directory does not exist"
 
-conn = sqlite3.connect(data_dir+"/data.db")
+conn = sqlite3.connect(data_dir+"/"+database_name)
 cur = conn.cursor()
 col2colname = {}
 colname2col = {}
@@ -95,15 +102,17 @@ for line in lf:
 lf.close()
 
 # data tables
+print "looking for filename regex: \"%s\"" % regex.pattern
+print "--you can specify regex by -r \"pattern\"" 
 for file in os.listdir(data_dir):
     if regex.match(file):
+        print "processing %s" % file
         table_name = re.sub("\.*", "", file)
         table_name = re.sub("-", "", table_name)
         cur.execute("DROP TABLE IF EXISTS %s" % table_name)
         items = [col2colname[i+1]+' int' for i in range(len(col2colname))]
         for key in colname2label.keys():
             items[colname2col[key]-1] = key + ' text'
-        print items
         cur.execute("CREATE TABLE %s(%s)" % (table_name, ', '.join(items)))        
         df = open(data_dir+'/'+file)
         for line in df:

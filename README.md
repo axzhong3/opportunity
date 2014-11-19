@@ -1,4 +1,22 @@
-python -g GOLDEN_FILE -i INPUT_VECTOR_FILE -c COLUMN_NUMBER [-d]
+data2db.py:
+==============================================
+python data2db.py [options]
+ [-c, --column_names=COLUMN_NAMES.TXT] -- if not specified use current dir
+ [-l, --label_legend=LABEL_LEGEND.TXT] -- if not specified use current dir
+ [-d, --data_dir=DATA_DIR]             -- if not specified use current dir
+ [-n,  --database_name=DATABASE_NAME]  -- if not specified use data.db
+ -r, --regex=DATA_FILES_TO_INCLUDE     -- if not specified use S*dat$
+
+e.g.
+python data2db.py -r S1.*dat$
+
+test.sql
+=============================================
+sqlite3 data.db < test.sql
+
+fmeasure.py:
+=============================================
+python fmeasure.py -g GOLDEN_FILE -i INPUT_VECTOR_FILE -c COLUMN_NUMBER [-d]
 
 NOTE: COLUMN_NUMBER = 1-7, 1 meaning the last column
 NOTE: -d will turn on debug mode to print out precision and recall for each class
